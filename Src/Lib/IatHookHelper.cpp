@@ -70,12 +70,17 @@ IatHookData *SetIatHook( IMAGE_DOS_HEADER *dosHeader, DWORD iatOffset, DWORD int
 	{
 		IatHookData *hook=g_IatHooks+g_IatHookCount;
 		g_IatHookCount++;
+#if defined(_M_AMD64) || defined(_M_IX86)
 		hook->jump[0]=hook->jump[1]=0x90; // NOP
 		hook->jump[2]=0xFF; hook->jump[3]=0x25; // JUMP
-#ifdef _WIN64
+#if defined(_M_AMD64)
 		hook->jumpOffs=0;
 #else
 		hook->jumpOffs=(DWORD)(hook)+8;
+#endif
+#elif defined(_M_ARM64)
+		hook->jump[0]=0x48; hook->jump[1]=0x00; hook->jump[2]=0x00; hook->jump[3]=0x58; // LDR X8, newProc
+		hook->jump[4]=0x00; hook->jump[5]=0x01; hook->jump[6]=0x1F; hook->jump[7]=0xD6; // BR X8
 #endif
 		hook->newProc=newProc;
 		hook->oldProc=(void*)thunk->u1.Function;

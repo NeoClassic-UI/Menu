@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -9,6 +13,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -16,6 +24,10 @@
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Setup|ARM64">
+      <Configuration>Setup</Configuration>
+      <Platform>ARM64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Setup|Win32">
       <Configuration>Setup</Configuration>
@@ -60,6 +72,13 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Setup|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
@@ -67,7 +86,20 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
@@ -92,11 +124,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\Version.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Setup|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Version.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\Version.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Version.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Version.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\Version.props" />
   </ImportGroup>
@@ -113,6 +157,12 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_64</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_ARM64</TargetName>
+    <IntDir>$(Configuration)ARM64\</IntDir>
+    <OutDir>..\$(Configuration)ARM64\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
@@ -125,6 +175,12 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_64</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_ARM64</TargetName>
+    <IntDir>$(Configuration)ARM64\</IntDir>
+    <OutDir>..\$(Configuration)ARM64\</OutDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Setup|Win32'">
     <OutDir>..\$(Configuration)\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
@@ -136,6 +192,12 @@
     <IntDir>$(Configuration)64\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Setup|ARM64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_ARM64</TargetName>
+    <IntDir>$(Configuration)ARM64\</IntDir>
+    <OutDir>..\$(Configuration)ARM64\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -180,6 +242,42 @@
       <GenerateStublessProxies>true</GenerateStublessProxies>
       <HeaderFileName>ClassicIEDLL_i.h</HeaderFileName>
       <DllDataFileName />
+      <InterfaceIdentifierFileName>ClassicIEDLL_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>ClassicIEDLL_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;CLASSICIEDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <RegisterOutput>true</RegisterOutput>
+      <AdditionalDependencies>uxtheme.lib;dwmapi.lib;comctl32.lib;msimg32.lib;winmm.lib;htmlhelp.lib;wininet.lib;wintrust.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\$(TargetName).def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <PerUserRedirection>true</PerUserRedirection>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>ClassicIEDLL_i.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
       <InterfaceIdentifierFileName>ClassicIEDLL_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>ClassicIEDLL_p.c</ProxyFileName>
     </Midl>
@@ -281,6 +379,43 @@
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>ClassicIEDLL_i.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>ClassicIEDLL_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>ClassicIEDLL_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;CLASSICIEDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <RegisterOutput>true</RegisterOutput>
+      <AdditionalDependencies>uxtheme.lib;dwmapi.lib;comctl32.lib;msimg32.lib;winmm.lib;htmlhelp.lib;wininet.lib;wintrust.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\$(TargetName).def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <PerUserRedirection>true</PerUserRedirection>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Setup|Win32'">
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -350,6 +485,41 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Setup|ARM64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>ClassicIEDLL_i.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>ClassicIEDLL_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>ClassicIEDLL_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;CLASSICIEDLL_EXPORTS;BUILD_SETUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);..\..\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>uxtheme.lib;dwmapi.lib;comctl32.lib;msimg32.lib;winmm.lib;htmlhelp.lib;wininet.lib;wintrust.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\$(TargetName).def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClassicIEBHO.cpp" />
     <ClCompile Include="ClassicIEDLL.cpp" />
@@ -371,6 +541,7 @@
     <None Include="ClassicIEDLL.rgs" />
     <None Include="ClassicIEDLL_32.def" />
     <None Include="ClassicIEDLL_64.def" />
+    <None Include="ClassicIEDLL_ARM64.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClassicIEBHO.h" />

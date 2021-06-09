@@ -20,12 +20,15 @@
 # Build results
 [Dd]ebug/
 [Dd]ebug64/
+[Dd]ebugARM64/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]elease64/
+[Rr]eleaseARM64/
 [Rr]eleases/
 x64/
 x86/
+ARM64/
 bld/
 [Bb]in/
 [Oo]bj/

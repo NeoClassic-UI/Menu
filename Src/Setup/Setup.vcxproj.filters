@@ -61,5 +61,6 @@
     <None Include="Temp\Setup32.msi_" />
     <None Include="Temp\Setup64.msi_" />
     <None Include="msichecksum.bin" />
+    <None Include="Temp\SetupARM64.msi_" />
   </ItemGroup>
 </Project>

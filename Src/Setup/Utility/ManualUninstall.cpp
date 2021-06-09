@@ -43,11 +43,14 @@
 #define RemoveDirectory2(x) RemoveDirectory(x)
 #endif
 
+typedef BOOL (WINAPI *FIsWow64Process2)( HANDLE hProcess, USHORT *pProcessMachine, USHORT *pNativeMachine );
+
 // files to delete from the Open-Shell folder
 static const wchar_t *g_InstalledFiles[]=
 {
 	L"ClassicExplorer32.dll",
 	L"ClassicExplorer64.dll",
+	L"ClassicExplorerARM64.dll",
 	L"ClassicExplorerSettings.exe",
 	L"ClassicIEDLL_32.dll",
 	L"ClassicIEDLL_64.dll",
@@ -951,6 +954,15 @@ static void ManualUninstallInternal( void )
 		}
 	}
 
+	BOOL bArm64System=FALSE;
+	HMODULE hKernel32=GetModuleHandle(L"kernel32.dll");
+	FIsWow64Process2 isWow64Process2=(FIsWow64Process2)GetProcAddress(hKernel32,"IsWow64Process2");
+	if (isWow64Process2)
+	{
+		USHORT processMachine = 0, nativeMachine = 0;
+		isWow64Process2(GetCurrentProcess(), &processMachine, &nativeMachine);
+		bArm64System=nativeMachine==IMAGE_FILE_MACHINE_ARM64;
+	}
 	BOOL bWow64=FALSE;
 	bool bIsWow64=IsWow64Process(GetCurrentProcess(),&bWow64) && bWow64;
 
@@ -1140,7 +1152,7 @@ static void ManualUninstallInternal( void )
 	{
 		// 64-bit OS
 		wchar_t path[_MAX_PATH];
-		Sprintf(path,_countof(path),L"%s\\System32\\StartMenuHelper64.dll",winDir);
+		Sprintf(path,_countof(path),L"%s\\System32\\StartMenuHelper%s64.dll",winDir,bArm64System?L"ARM":L"");
 		Wow64EnableWow64FsRedirection(FALSE);
 		DeleteFileEx(path,true);
 		Sprintf(path,_countof(path),L"%s\\SysWOW64\\StartMenuHelper32.dll",winDir);

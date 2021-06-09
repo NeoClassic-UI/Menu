@@ -8,6 +8,7 @@
 #define IDS_ERR_CORRUPTED               102
 #define IDR_MSI_FILE32                  132
 #define IDR_MSI_FILE64                  164
+#define IDR_MSI_FILEARM64               165
 #define IDS_ERR_INTERNAL                166
 #define IDS_ERR_EXTRACT                 167
 #define IDR_MSI_CHECKSUM                167

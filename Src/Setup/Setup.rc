@@ -100,8 +100,12 @@ END
 // MSI_FILE
 //
 
+#if defined(_M_AMD64) || defined(_M_IX86)
 IDR_MSI_FILE32          MSI_FILE                "Temp\\Setup32.msi_"
 IDR_MSI_FILE64          MSI_FILE                "Temp\\Setup64.msi_"
+#elif defined(_M_ARM64)
+IDR_MSI_FILEARM64       MSI_FILE                "Temp\\SetupARM64.msi_"
+#endif
 IDR_MSI_CHECKSUM        MSI_FILE                "msichecksum.bin"
 
 

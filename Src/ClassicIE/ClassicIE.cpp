@@ -189,8 +189,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 				}
 			}
 
-#ifdef _WIN64
+#if defined(_M_AMD64)
 			HMODULE hHookModule=GetModuleHandle(L"ClassicIEDLL_64.dll");
+#elif defined(_M_ARM64)
+			HMODULE hHookModule=GetModuleHandle(L"ClassicIEDLL_ARM64.dll");
 #else
 			HMODULE hHookModule=GetModuleHandle(L"ClassicIEDLL_32.dll");
 #endif

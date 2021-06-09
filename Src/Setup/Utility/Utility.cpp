@@ -79,7 +79,7 @@ struct Chunk
 	int start1, start2, len;
 };
 
-int CalcMsiChecksum( wchar_t *const *params, int count )
+int CalcMsiChecksum( wchar_t *const *params, int count, bool bArm64 )
 {
 	if (count<2) return 2;
 
@@ -88,7 +88,10 @@ int CalcMsiChecksum( wchar_t *const *params, int count )
 	// load files
 	wchar_t path1[_MAX_PATH];
 	std::vector<unsigned char> buf1, buf2;
-	Sprintf(path1,_countof(path1),L"%s\\Setup32.msi",params[1]);
+	if (!bArm64)
+		Sprintf(path1,_countof(path1),L"%s\\Setup32.msi",params[1]);
+	else
+		Sprintf(path1,_countof(path1),L"%s\\SetupARM64.msi",params[1]);
 	LoadFile(path1,buf1);
 	if (buf1.empty())
 	{
@@ -96,12 +99,15 @@ int CalcMsiChecksum( wchar_t *const *params, int count )
 		return 1;
 	}
 	wchar_t path2[_MAX_PATH];
-	Sprintf(path2,_countof(path2),L"%s\\Setup64.msi",params[1]);
-	LoadFile(path2,buf2);
-	if (buf2.empty())
+	if (!bArm64)
 	{
-		Printf("Failed to open file %s\n",path2);
-		return 1;
+		Sprintf(path2,_countof(path2),L"%s\\Setup64.msi",params[1]);
+		LoadFile(path2,buf2);
+		if (buf2.empty())
+		{
+			Printf("Failed to open file %s\n",path2);
+			return 1;
+		}
 	}
 
 	int len1=(int)buf1.size();
@@ -112,39 +118,42 @@ int CalcMsiChecksum( wchar_t *const *params, int count )
 	for (std::vector<unsigned char>::iterator it=buf2.begin();it!=buf2.end();++it)
 		*it^=0xFF;
 
-	// detect common blocks (assuming at least 256K in size and in the same order in both files)
-	const int BLOCK_SIZE=256*1024;
+	// detect x86/x64 common blocks (assuming at least 256K in size and in the same order in both files)
 	std::vector<Chunk> chunks;
-	int start2=0;
-	for (int i=0;i<len1-BLOCK_SIZE;i+=BLOCK_SIZE)
+	if (!bArm64)
 	{
-		for (int j=start2;j<len2-BLOCK_SIZE;j++)
+		const int BLOCK_SIZE=256*1024;	
+		int start2=0;
+		for (int i=0;i<len1-BLOCK_SIZE;i+=BLOCK_SIZE)
 		{
-			if (memcmp(&buf1[i],&buf2[j],BLOCK_SIZE)==0)
+			for (int j=start2;j<len2-BLOCK_SIZE;j++)
 			{
-				Chunk chunk;
-				chunk.start1=i;
-				chunk.start2=j;
-				chunk.len=BLOCK_SIZE;
-				while (chunk.start1>0 && chunk.start2>0 && buf1[chunk.start1-1]==buf2[chunk.start2-1])
+				if (memcmp(&buf1[i],&buf2[j],BLOCK_SIZE)==0)
 				{
-					chunk.start1--;
-					chunk.start2--;
-					chunk.len++;
+					Chunk chunk;
+					chunk.start1=i;
+					chunk.start2=j;
+					chunk.len=BLOCK_SIZE;
+					while (chunk.start1>0 && chunk.start2>0 && buf1[chunk.start1-1]==buf2[chunk.start2-1])
+					{
+						chunk.start1--;
+						chunk.start2--;
+						chunk.len++;
+					}
+					while (chunk.start1+chunk.len<len1 && chunk.start2+chunk.len<len2 && buf1[chunk.start1+chunk.len]==buf2[chunk.start2+chunk.len])
+					{
+						chunk.len++;
+					}
+					chunks.push_back(chunk);
+					i=chunk.start1+chunk.len-1;
+					start2=chunk.start2+chunk.len;
+					break;
 				}
-				while (chunk.start1+chunk.len<len1 && chunk.start2+chunk.len<len2 && buf1[chunk.start1+chunk.len]==buf2[chunk.start2+chunk.len])
-				{
-					chunk.len++;
-				}
-				chunks.push_back(chunk);
-				i=chunk.start1+chunk.len-1;
-				start2=chunk.start2+chunk.len;
-				break;
 			}
 		}
 	}
 
-	// save modified 32-bit MSI
+	// save modified x86 or ARM64 MSI
 	{
 		Strcat(path1,_countof(path1),L"_");
 		FILE *f=NULL;
@@ -158,6 +167,7 @@ int CalcMsiChecksum( wchar_t *const *params, int count )
 	}
 
 	// save modified 64-bit MSI
+	if (!bArm64)
 	{
 		Strcat(path2,_countof(path2),L"_");
 		FILE *f=NULL;
@@ -180,7 +190,7 @@ int CalcMsiChecksum( wchar_t *const *params, int count )
 
 	unsigned int fnvs[2];
 	fnvs[0]=CalcFNVHash(&buf1[0],len1,FNV_HASH0);
-	fnvs[1]=CalcFNVHash(&buf2[0],len2,FNV_HASH0);
+	fnvs[1]=bArm64?0:CalcFNVHash(&buf2[0],len2,FNV_HASH0);
 
 	// save fnvs and chunks
 	{
@@ -1092,7 +1102,8 @@ static HRESULT CALLBACK TaskDialogCallback( HWND hwnd, UINT uNotification, WPARA
 // Open-Shell utility - multiple utilities for building and maintaining Open-Shell
 // Usage:
 //   no parameters - saves a troubleshooting log
-//   crcmsi <msi path> // creates a file with checksum of both msi files
+//   crcmsi <msi path> // creates a file with checksum of the x86 and x64 msi files
+//   crcarm64msi <msi path> // creates a file with checksum of the ARM64 msi file
 //   makeEN <explorer dll> <start menu dll> <ie dll> <update exe> // extracts the localization resources and creates a sample en-US.DLL
 //   extract <dll> <csv> // extracts the string table, the dialog text, and the L10N text from a DLL and stores it in a CSV
 //   extract en-us.dll <dll> <csv> // extracts the string table, the dialog text, and the L10N text from two DLL and stores it in a CSV
@@ -1158,7 +1169,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpstrC
 #ifndef _WIN64
 	if (_wcsicmp(params[0],L"crcmsi")==0)
 	{
-		return CalcMsiChecksum(params,count);
+		return CalcMsiChecksum(params,count,false);
+	}
+
+	if (_wcsicmp(params[0],L"crcarm64msi")==0)
+	{
+		return CalcMsiChecksum(params,count,true);
 	}
 
 	if (_wcsicmp(params[0],L"makeEN")==0)

@@ -10,7 +10,7 @@ Visual Studio 2019 (Community Edition is enough)
   - Windows 10 SDK (10.0.19041.0) for Desktop C++
   - Visual C++ ATL support
 HTML Help Workshop
-WiX 3.7
+WiX 3.7 (3.14 for ARM64)
 7-Zip
 It is possible to convert the projects to newer versions of Visual Studio and newer SDKs.
 Newer versions of WiX will probably work fine.
